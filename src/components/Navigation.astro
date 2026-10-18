@@ -1,0 +1,248 @@
+---
+// Automatically detect if we are on the home page
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '/index.html';
+---
+
+<nav
+	class='sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md'
+>
+	<div class='max-w-6xl mx-auto px-6 h-16 flex items-center justify-between'>
+		<div class='flex items-center'>
+			{
+				isHome ? (
+					<div class='flex items-center gap-2.5'>
+						<svg
+							class='w-8 h-8 text-foreground'
+							viewBox='0 0 100 100'
+							fill='none'
+							xmlns='http://www.w3.org/2000/svg'
+						>
+							<circle
+								cx='50'
+								cy='50'
+								r='30'
+								stroke='currentColor'
+								stroke-width='6'></circle>
+							<path
+								d='M50 32 68 50 50 68 32 50Z'
+								fill='#0a84ff'
+								stroke='currentColor'
+								stroke-width='3'
+								stroke-linejoin='round'></path>
+							<path
+								d='M45 52 A5 5 0 0 1 55 52'
+								stroke='#ffd60a'
+								stroke-width='3'
+								stroke-linecap='round'></path>
+							<path
+								d='M41 52 A9 9 0 0 1 59 52'
+								stroke='#ffd60a'
+								stroke-width='3'
+								stroke-linecap='round'></path>
+							<circle cx='50' cy='58' r='2.5' fill='#ffd60a'></circle>
+						</svg>
+						<span
+							class='font-bold uppercase tracking-tighter text-foreground text-lg'
+						>
+							RTSP Camera
+						</span>
+					</div>
+				) : (
+					<a
+						href='/'
+						class='flex items-center gap-3 group text-foreground hover:text-primary transition-all'
+					>
+						<div
+							class='bg-primary w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-primary/20'
+						>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								class='w-4 h-4 text-primary-foreground'
+								viewBox='0 0 24 24'
+								fill='none'
+								stroke='currentColor'
+								stroke-width='3'
+								stroke-linecap='round'
+								stroke-linejoin='round'
+							>
+								<path d='m15 18-6-6 6-6' />
+							</svg>
+						</div>
+						<span class='text-sm font-bold uppercase tracking-tight'>
+							Back to Home
+						</span>
+					</a>
+				)
+			}
+		</div>
+
+		<div
+			class='flex items-center gap-1.5 bg-card/50 p-1 rounded-md border border-border backdrop-blur-sm hover:bg-card/70 transition-colors'
+		>
+			<button
+				id='theme-light'
+				class='hover:cursor-pointer p-1.5 rounded transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-primary/10 flex items-center justify-center'
+				title='Light theme'
+				aria-label='Switch to light theme'
+			>
+				<svg class='w-4 h-4' fill='currentColor' viewBox='0 0 24 24'>
+					<circle cx='12' cy='12' r='5'></circle>
+					<line
+						x1='12'
+						y1='1'
+						x2='12'
+						y2='3'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='12'
+						y1='21'
+						x2='12'
+						y2='23'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='4.22'
+						y1='4.22'
+						x2='5.64'
+						y2='5.64'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='18.36'
+						y1='18.36'
+						x2='19.78'
+						y2='19.78'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='1'
+						y1='12'
+						x2='3'
+						y2='12'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='21'
+						y1='12'
+						x2='23'
+						y2='12'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='4.22'
+						y1='19.78'
+						x2='5.64'
+						y2='18.36'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+					<line
+						x1='18.36'
+						y1='5.64'
+						x2='19.78'
+						y2='4.22'
+						stroke='currentColor'
+						stroke-width='2'
+						stroke-linecap='round'></line>
+				</svg>
+			</button>
+			<div class='w-px h-4 bg-border/50'></div>
+			<button
+				id='theme-dark'
+				class='hover:cursor-pointer p-1.5 rounded transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-primary/10 flex items-center justify-center'
+				title='Dark theme'
+				aria-label='Switch to dark theme'
+			>
+				<svg
+					class='w-4 h-4'
+					fill='none'
+					stroke='currentColor'
+					viewBox='0 0 24 24'
+					stroke-width='2'
+				>
+					<path
+						d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'
+						stroke='currentColor'
+						stroke-width='2'
+						fill='none'></path>
+				</svg>
+			</button>
+			<div class='w-px h-4 bg-border/50'></div>
+			<button
+				id='theme-system'
+				class='hover:cursor-pointer p-1.5 rounded transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-primary/10 flex items-center justify-center'
+				title='System theme'
+				aria-label='Follow system theme'
+			>
+				<svg
+					class='w-4 h-4'
+					fill='none'
+					stroke='currentColor'
+					viewBox='0 0 24 24'
+					stroke-width='2'
+				>
+					<rect x='2' y='3' width='20' height='14' rx='2' ry='2'></rect>
+					<line x1='8' y1='21' x2='16' y2='21'></line>
+					<line x1='12' y1='17' x2='12' y2='21'></line>
+				</svg>
+			</button>
+		</div>
+	</div>
+</nav>
+
+<script is:inline>
+	const applyTheme = () => {
+		const theme = localStorage.getItem('theme') || 'system';
+		const isDark =
+			theme === 'dark' ||
+			(theme === 'system' &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches);
+		const html = document.documentElement;
+		html.classList.remove('light', 'dark');
+		if (theme === 'light') html.classList.add('light');
+		else if (theme === 'dark') html.classList.add('dark');
+		else if (isDark) html.classList.add('dark');
+
+		const btns = {
+			light: document.getElementById('theme-light'),
+			dark: document.getElementById('theme-dark'),
+			system: document.getElementById('theme-system'),
+		};
+		Object.entries(btns).forEach(([key, btn]) => {
+			if (!btn) return;
+			btn.classList.remove('bg-primary/20', 'text-primary');
+			if (key === theme) btn.classList.add('bg-primary/20', 'text-primary');
+		});
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', applyTheme);
+	} else {
+		applyTheme();
+	}
+
+	const setupButtons = () => {
+		['light', 'dark', 'system'].forEach((id) => {
+			const btn = document.getElementById(`theme-${id}`);
+			if (btn) {
+				btn.addEventListener('click', () => {
+					localStorage.setItem('theme', id);
+					applyTheme();
+					setTimeout(() => {
+						window.dispatchEvent(new Event('theme-changed'));
+					}, 0);
+				});
+			}
+		});
+	};
+
+	setupButtons();
+</script>

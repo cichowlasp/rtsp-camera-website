@@ -1,0 +1,202 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('legal');
+	return entries.map((entry: CollectionEntry<'legal'>) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}
+
+// 1. Define the type for the props
+interface Props {
+	entry: CollectionEntry<'legal'>;
+}
+
+// 2. Astro.props now knows that 'entry' belongs to the 'legal' collection
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<style is:global>
+	.prose-custom {
+		/* Soften the foreground for long-form reading */
+		color: var(--foreground);
+		opacity: 0.95;
+	}
+
+	/* Hierarchy & Headings */
+	.prose-custom h1 {
+		font-size: 3rem;
+		font-weight: 900;
+		letter-spacing: -0.04em;
+		text-transform: uppercase;
+		font-style: italic;
+		color: var(--foreground);
+		margin-bottom: 2rem;
+		line-height: 1;
+	}
+
+	.prose-custom h2 {
+		font-size: 1.5rem;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--foreground);
+		margin-top: 3.5rem;
+		margin-bottom: 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	/* Add a subtle accent line to H2s */
+	.prose-custom h2::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: var(--border);
+	}
+
+	.prose-custom h3 {
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--primary);
+		margin-top: 2rem;
+		margin-bottom: 0.75rem;
+	}
+
+	/* Paragraph Body */
+	.prose-custom p {
+		line-height: 1.8;
+		margin-bottom: 1.5rem;
+		font-size: 1.05rem;
+		color: var(--foreground);
+		opacity: 0.85;
+	}
+
+	/* Lists - Clean & Modern */
+	.prose-custom ul {
+		margin-bottom: 1.5rem;
+		padding-left: 0.5rem;
+	}
+
+	.prose-custom li {
+		margin-bottom: 0.75rem;
+		padding-left: 1.5rem;
+		position: relative;
+		line-height: 1.6;
+	}
+
+	.prose-custom ul > li::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.65rem;
+		width: 6px;
+		height: 6px;
+		border-radius: 99px;
+		background-color: var(--primary);
+	}
+
+	/* Data Tables - Mobile Ready */
+	.prose-custom table {
+		width: 100%;
+		margin: 2rem 0;
+		border-radius: 1rem;
+		overflow: hidden;
+		border: 1px solid var(--border);
+		background: var(--card);
+		font-size: 0.9rem;
+	}
+
+	.prose-custom th {
+		background: var(--muted);
+		padding: 1rem;
+		text-align: left;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-size: 0.75rem;
+	}
+
+	.prose-custom td {
+		padding: 1rem;
+		border-top: 1px solid var(--border);
+	}
+
+	/* Callouts / Blockquotes */
+	.prose-custom blockquote {
+		margin: 2rem 0;
+		padding: 1.5rem;
+		background: var(--muted);
+		border-radius: 1rem;
+		border-left: 4px solid var(--primary);
+		font-style: normal;
+	}
+
+	.prose-custom blockquote p {
+		margin: 0;
+		font-weight: 500;
+		color: var(--foreground);
+	}
+
+	/* Code Tags */
+	.prose-custom code {
+		font-family: ui-monospace, monospace;
+		font-size: 0.9rem;
+		background: var(--primary);
+		color: var(--primary-foreground);
+		padding: 0.2rem 0.4rem;
+		border-radius: 0.4rem;
+		font-weight: 600;
+		display: inline-block; /* Allows the box to wrap better */
+		word-break: break-all; /* Forces break at any character if needed */
+		overflow-wrap: anywhere; /* Extra safety for very narrow screens */
+		white-space: normal; /* Ensures spaces inside code still work */
+		max-width: 100%;
+	}
+</style>
+
+<Layout title={entry.data.title}>
+	<main class='max-w-3xl mx-auto px-6 py-20'>
+		<div class='mb-12'>
+			<p
+				class='text-primary font-bold text-xs uppercase tracking-[0.2em] mb-4'
+			>
+				Legal Documentation
+			</p>
+			<article class='prose-custom'>
+				<Content />
+			</article>
+		</div>
+
+		<div
+			class='mt-20 pt-10 border-t border-border flex flex-col items-center gap-6'
+		>
+			<p class='text-muted-foreground text-sm italic'>
+				Have questions about our data policy? Contact support.
+			</p>
+			<a
+				href='/'
+				class='inline-flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-all active:scale-95'
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					width='16'
+					height='16'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					stroke-width='3'
+					stroke-linecap='round'
+					stroke-linejoin='round'
+					><path d='m15 18-6-6 6-6'></path></svg
+				>
+				Back to RTSP Camera
+			</a>
+		</div>
+	</main>
+</Layout>
