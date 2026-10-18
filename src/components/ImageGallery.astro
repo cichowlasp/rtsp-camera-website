@@ -1,0 +1,192 @@
+---
+import { Picture } from 'astro:assets';
+
+interface Props {
+	screenshots: { src: any; alt: string }[];
+}
+
+const { screenshots } = Astro.props;
+---
+
+<div
+	class='flex overflow-x-auto pb-10 snap-x snap-mandatory gap-6 no-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-x-visible sm:pb-0'
+>
+	{
+		screenshots.map((item, index) => (
+			<button
+				class='hover:border-accent gallery-trigger group relative flex-none snap-center cursor-pointer hover:scale-[1.02] transition-all h-[70vh] w-[calc(70vh*9/19)] sm:h-auto sm:w-auto sm:aspect-9/19 bg-card border-4 sm:border-8 border-border rounded-[2.5rem] overflow-hidden shadow-xl'
+				data-index={index}
+				aria-label={`View ${item.alt} in full screen`}>
+				<Picture
+					src={item.src}
+					formats={['avif', 'webp']}
+					alt={item.alt}
+					class='absolute inset-0 w-full h-full object-cover'
+					widths={[400, 800]}
+					pictureAttributes={{
+						class: 'absolute inset-0 w-full h-full',
+					}}
+				/>
+			</button>
+		))
+	}
+</div>
+<dialog
+	id='lightbox'
+	class='bg-transparent backdrop:bg-background/95 backdrop:backdrop-blur-xl p-0 m-0 w-screen h-screen max-w-none max-h-none overflow-hidden outline-none'
+>
+	<div
+		class='relative w-full h-full flex flex-col items-center justify-center p-2 md:p-12'
+	>
+		<form method='dialog' class='absolute inset-0 cursor-zoom-out'>
+			<button class='sr-only'>Close</button>
+		</form>
+
+		<div class='absolute top-4 right-4 md:top-6 md:right-6 z-80'>
+			<button
+				id='close-btn'
+				class='text-foreground bg-card/80 hover:bg-primary p-2 md:p-3 rounded-full border-2 border-border transition-colors'
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					class='w-5 h-5 md:w-6 md:h-6'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					stroke-width='3'
+					stroke-linecap='round'
+					stroke-linejoin='round'
+					><path d='M18 6 6 18'></path><path d='m6 6 12 12'
+					></path></svg
+				>
+			</button>
+		</div>
+
+		<div
+			class='relative z-10 pointer-events-none flex flex-col items-center justify-center w-full max-w-4xl h-full'
+		>
+			<img
+				id='lightbox-img'
+				src=''
+				alt=''
+				class='w-auto max-w-[95vw] max-h-[75vh] md:max-h-[80vh] rounded-3xl md:rounded-[2.5rem] shadow-2xl border-2 md:border-4 border-white/10 object-contain shadow-black/50'
+			/>
+			<p
+				id='lightbox-caption'
+				class='text-center mt-3 text-muted-foreground font-medium italic text-xs md:text-sm px-6'
+			>
+			</p>
+		</div>
+
+		<div
+			class='fixed bottom-6 left-0 w-full flex items-center justify-between px-6 z-80 md:contents'
+		>
+			<button
+				id='prev-btn'
+				class='md:absolute md:left-10 text-foreground bg-card/90 p-3 md:p-5 rounded-full border-2 border-border hover:bg-primary transition-all active:scale-95 shadow-2xl'
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					class='w-6 h-6 md:w-8 md:h-8'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					stroke-width='3'
+					stroke-linecap='round'
+					stroke-linejoin='round'
+					><path d='m15 18-6-6 6-6'></path></svg
+				>
+			</button>
+
+			<button
+				id='next-btn'
+				class='md:absolute md:right-10 text-foreground bg-card/90 p-3 md:p-5 rounded-full border-2 border-border hover:bg-primary transition-all active:scale-95 shadow-2xl'
+			>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					class='w-6 h-6 md:w-8 md:h-8'
+					viewBox='0 0 24 24'
+					fill='none'
+					stroke='currentColor'
+					stroke-width='3'
+					stroke-linecap='round'
+					stroke-linejoin='round'><path d='m9 18 6-6-6-6'></path></svg
+				>
+			</button>
+		</div>
+	</div>
+</dialog>
+
+<script>
+	const initGallery = () => {
+		const triggers = document.querySelectorAll('.gallery-trigger');
+		const dialog = document.getElementById('lightbox') as HTMLDialogElement;
+		const img = document.getElementById('lightbox-img') as HTMLImageElement;
+		const caption = document.getElementById('lightbox-caption');
+		const nextBtn = document.getElementById('next-btn');
+		const prevBtn = document.getElementById('prev-btn');
+		const closeBtn = document.getElementById('close-btn');
+
+		const galleryData = Array.from(triggers).map((t) => ({
+			src: (t.querySelector('img') as HTMLImageElement).src,
+			alt: (t.querySelector('img') as HTMLImageElement).alt,
+		}));
+
+		let currentIndex = 0;
+
+		const updateView = () => {
+			img.classList.remove('animate-in', 'fade-in', 'zoom-in');
+			img.src = galleryData[currentIndex].src;
+			if (caption) caption.textContent = galleryData[currentIndex].alt;
+			setTimeout(
+				() =>
+					img.classList.add(
+						'animate-in',
+						'fade-in',
+						'zoom-in',
+						'duration-300',
+					),
+				10,
+			);
+		};
+
+		triggers.forEach((btn, i) => {
+			btn.addEventListener('click', () => {
+				currentIndex = i;
+				updateView();
+				dialog.showModal();
+				document.body.style.overflow = 'hidden';
+			});
+		});
+
+		const close = () => {
+			dialog.close();
+			document.body.style.overflow = 'auto';
+		};
+
+		nextBtn?.addEventListener('click', (e) => {
+			e.stopPropagation();
+			currentIndex = (currentIndex + 1) % galleryData.length;
+			updateView();
+		});
+
+		prevBtn?.addEventListener('click', (e) => {
+			e.stopPropagation();
+			currentIndex =
+				(currentIndex - 1 + galleryData.length) % galleryData.length;
+			updateView();
+		});
+
+		closeBtn?.addEventListener('click', close);
+		dialog.addEventListener('close', close);
+
+		window.addEventListener('keydown', (e) => {
+			if (!dialog.open) return;
+			if (e.key === 'ArrowRight') nextBtn?.click();
+			if (e.key === 'ArrowLeft') prevBtn?.click();
+		});
+	};
+
+	initGallery();
+	document.addEventListener('astro:after-swap', initGallery);
+</script>
