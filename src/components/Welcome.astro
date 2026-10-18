@@ -1,4 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+import Screen1 from '../assets/Screenshot1.png';
+import Screen2 from '../assets/Screenshot2.png';
+import Screen3 from '../assets/Screenshot3.png';
+import Screen4 from '../assets/Screenshot4.png';
+import Screen5 from '../assets/Screenshot5.png';
+import Screen6 from '../assets/Screenshot6.png';
+
 const features = [
 	{
 		num: '01',
@@ -20,6 +28,15 @@ const features = [
 		title: '100% local',
 		text: 'No analytics, no tracking, no cloud storage. Your footage stays yours.',
 	},
+];
+
+const screenshots = [
+	{ src: Screen1, alt: 'RTSP Camera screenshot 1' },
+	{ src: Screen2, alt: 'RTSP Camera screenshot 2' },
+	{ src: Screen3, alt: 'RTSP Camera screenshot 3' },
+	{ src: Screen4, alt: 'RTSP Camera screenshot 4' },
+	{ src: Screen5, alt: 'RTSP Camera screenshot 5' },
+	{ src: Screen6, alt: 'RTSP Camera screenshot 6' },
 ];
 ---
 
@@ -116,11 +133,17 @@ const features = [
 			class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center'
 		>
 			{
-				[1, 2, 3].map((n) => (
+				screenshots.map((s) => (
 					<div
-						class='aspect-9/19 w-full max-w-[240px] bg-card border-4 border-border rounded-[2.5rem] overflow-hidden flex items-center justify-center text-muted-foreground text-sm'
+						class='aspect-[9/19] w-full max-w-[240px] bg-card border-4 border-border rounded-[2.5rem] overflow-hidden shadow-xl'
 					>
-						Screenshot {n}
+						<Image
+							src={s.src}
+							alt={s.alt}
+							widths={[400, 800]}
+							sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+							class='w-full h-full object-cover'
+						/>
 					</div>
 				))
 			}
