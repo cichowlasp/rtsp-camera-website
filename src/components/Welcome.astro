@@ -42,31 +42,18 @@ const screenshots = [
 ---
 
 <header class='pt-16 pb-8 px-6 text-center'>
-	<svg
-		class='mx-auto w-24 h-24 text-foreground mb-6'
-		viewBox='0 0 100 100'
-		fill='none'
-		xmlns='http://www.w3.org/2000/svg'
-	>
-		<circle cx='50' cy='50' r='30' stroke='currentColor' stroke-width='6'></circle>
-		<path
-			d='M50 32 68 50 50 68 32 50Z'
-			fill='#0a84ff'
-			stroke='currentColor'
-			stroke-width='3'
-			stroke-linejoin='round'></path>
-		<path
-			d='M45 52 A5 5 0 0 1 55 52'
-			stroke='#ffd60a'
-			stroke-width='3'
-			stroke-linecap='round'></path>
-		<path
-			d='M41 52 A9 9 0 0 1 59 52'
-			stroke='#ffd60a'
-			stroke-width='3'
-			stroke-linecap='round'></path>
-		<circle cx='50' cy='58' r='2.5' fill='#ffd60a'></circle>
-	</svg>
+	<div class='relative mx-auto w-24 h-24 mb-6'>
+		<img
+			src='/app-icon.png'
+			class='w-24 h-24 rounded-3xl dark:hidden'
+			alt='RTSP Camera'
+		/>
+		<img
+			src='/app-icon-dark.png'
+			class='w-24 h-24 rounded-3xl hidden dark:block'
+			alt='RTSP Camera'
+		/>
+	</div>
 	<h1
 		class='text-4xl text-foreground font-black tracking-tighter uppercase mb-2'
 	>
