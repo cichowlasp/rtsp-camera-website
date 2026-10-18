@@ -37,4 +37,4 @@ The `.github/workflows/deploy.yml` action deploys to **GitHub Pages** on every p
 
 - [ ] Replace the App Store URL (`idYOUR_APP_ID`) in `Welcome.astro` with the real one.
 - [ ] Swap the placeholder screenshot cards in `Welcome.astro` for real screenshots.
-- [ ] Replace the placeholder support email (`support@rtspcamera.app`) in `privacy.md` / footer.
+- [ ] Replace the placeholder support email (`cichowlas.p@gmail.com`) in `privacy.md` / footer.

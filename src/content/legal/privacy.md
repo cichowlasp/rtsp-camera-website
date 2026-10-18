@@ -39,4 +39,4 @@ Because the app collects no personal data, no legal basis for processing is requ
 We may update this policy as RTSP Camera evolves. The "Last updated" date at the top of this page will reflect the most recent changes.
 
 ## 11. Contact
-For any privacy-related questions, please contact: **support@rtspcamera.app**
+For any privacy-related questions, please contact: **cichowlas.p@gmail.com**
