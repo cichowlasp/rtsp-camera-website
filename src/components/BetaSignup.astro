@@ -40,54 +40,34 @@
 					</p>
 				</div>
 
-				<div class='space-y-6'>
-					<div
-						class='bg-background/50 border-2 border-border rounded-2xl p-6 text-sm space-y-4'
-					>
-						<div class='flex gap-4 items-start'>
-							<span
-								class='bg-primary text-foreground w-6 h-6 rounded-full flex-none flex items-center justify-center font-bold text-[10px]'
-								>1</span
-							>
-							<p class='text-muted-foreground'>
-								Tap <strong>Request Access</strong> to open the
-								sign-up form.
-							</p>
-						</div>
-						<div class='flex gap-4 items-start'>
-							<span
-								class='bg-primary text-foreground w-6 h-6 rounded-full flex-none flex items-center justify-center font-bold text-[10px]'
-								>2</span
-							>
-							<p class='text-muted-foreground'>
-								Use your <strong>Play Store email</strong> to
-								receive the invite.
-							</p>
-						</div>
-					</div>
-
-					<a
-						href='https://docs.google.com/forms/d/e/1FAIpQLScHCjylYYJDIIJqhX9I2p0Z6kErxLdxOcVLlAC-iy5y-UVhEA/viewform?usp=header'
-						target='_blank'
-						class='w-full bg-[#00C853] text-white font-bold py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2'
-					>
-						<span>Request Access</span>
-						<svg
-							width='20'
-							height='20'
-							viewBox='0 0 24 24'
-							fill='none'
-							stroke='currentColor'
-							stroke-width='2.5'
+				<form id='beta-tester-form' class='space-y-6'>
+					<div class='relative'>
+						<input
+							type='email'
+							id='beta-email'
+							name='entry.1612656547'
+							required
+							placeholder='Google Play Email'
+							class='placeholder:text-muted-foreground text-muted-foreground w-full px-6 py-4 bg-background border-2 border-border rounded-2xl focus:ring-4 focus:ring-primary/20 outline-none transition-all'
+						/>
+						<p
+							class='mt-3 px-1 text-[11px] leading-relaxed text-muted-foreground italic'
 						>
-							<path
-								d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'
-							></path>
-							<polyline points='15 3 21 3 21 9'></polyline>
-							<line x1='10' y1='14' x2='21' y2='3'></line>
-						</svg>
-					</a>
-				</div>
+							<span class='text-primary font-bold'
+								>Important:</span
+							> Use your <span class='text-foreground font-bold'
+								>Play Store email</span
+							> to receive the invite.
+						</p>
+					</div>
+					<button
+						type='submit'
+						id='submit-button'
+						class='cursor-pointer w-full bg-primary text-foreground font-bold py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2'
+					>
+						Request Access
+					</button>
+				</form>
 			</div>
 
 			<div
@@ -156,6 +136,28 @@
 					</a>
 				</div>
 			</div>
+
+			<div
+				id='success-state'
+				class='col-start-1 row-start-1 transition-all duration-300 opacity-0 invisible pointer-events-none text-center py-10'
+			>
+				<div
+					class='w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6'
+				>
+					<span class='text-4xl'>🎥</span>
+				</div>
+				<h3 class='text-foreground text-2xl font-black mb-2'>
+					You're on the list!
+				</h3>
+				<p class='text-muted-foreground mb-6'>
+					We'll send an invite as soon as a spot opens up.
+				</p>
+				<button
+					onclick='window.location.reload()'
+					class='text-xs underline text-foreground opacity-50 hover:opacity-100 transition-opacity cursor-pointer'
+					>Back to form</button
+				>
+			</div>
 		</div>
 
 		<p
@@ -172,6 +174,11 @@
 		const btnIos = document.getElementById('tab-ios');
 		const contentAndroid = document.getElementById('content-android');
 		const contentIos = document.getElementById('content-ios');
+		const tabContainer = document.getElementById('tab-container');
+		const successState = document.getElementById('success-state');
+		const form = document.getElementById('beta-tester-form');
+		const emailInput = document.getElementById('beta-email');
+		const submitBtn = document.getElementById('submit-button');
 
 		const switchTab = (active) => {
 			if (active === 'android') {
@@ -205,6 +212,63 @@
 
 		btnAndroid?.addEventListener('click', () => switchTab('android'));
 		btnIos?.addEventListener('click', () => switchTab('ios'));
+
+		form?.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const email = emailInput?.value;
+			if (!email) return;
+
+			if (submitBtn) {
+				submitBtn.innerHTML = `<span>Joining...</span>`;
+				submitBtn.classList.add('opacity-50', 'pointer-events-none');
+			}
+
+			try {
+				const fbzx = Math.floor(
+					Math.random() * 2 ** 63 - 2 ** 62,
+				).toString();
+
+				const body = new URLSearchParams();
+				body.append('entry.1612656547', email);
+				body.append('fvv', '1');
+				body.append('partialResponse', `[null,null,"${fbzx}"]`);
+				body.append('pageHistory', '0');
+				body.append('fbzx', fbzx);
+				body.append('submissionTimestamp', Date.now().toString());
+
+				await fetch(
+					'https://docs.google.com/forms/d/e/1FAIpQLScHCjylYYJDIIJqhX9I2p0Z6kErxLdxOcVLlAC-iy5y-UVhEA/formResponse',
+					{
+						method: 'POST',
+						mode: 'no-cors',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: body.toString(),
+					},
+				);
+
+				tabContainer?.classList.add('hidden');
+				contentAndroid?.classList.add('hidden');
+				contentIos?.classList.add('hidden');
+
+				successState?.classList.remove(
+					'opacity-0',
+					'invisible',
+					'pointer-events-none',
+				);
+				successState?.classList.add('opacity-100', 'visible');
+			} catch (error) {
+				console.error(error);
+				if (submitBtn) {
+					submitBtn.innerHTML = `Request Access`;
+					submitBtn.classList.remove(
+						'opacity-50',
+						'pointer-events-none',
+					);
+				}
+			}
+		});
 	};
 
 	initBetaSection();
